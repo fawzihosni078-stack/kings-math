@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ملوك الرياضيات</title>
+<style>
+:root{
+  --green:#0f5b52; --lime:#8bc34a; --light:#f7f9ef; --gold:#f4c542;
+  --red:#e85b5b; --ink:#183a36; --blue:#35a9d6; --pink:#ed9bc1;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; font-family:"Tahoma","Arial",sans-serif;
+  background:linear-gradient(135deg,#eaf7ee,#fffdf2);
+  color:var(--ink); overflow-x:hidden;
+}
+body:before{
+  content:""; position:fixed; inset:0; pointer-events:none; opacity:.10;
+  background-image:radial-gradient(circle at 20% 20%,#0f5b52 2px,transparent 3px),
+                   radial-gradient(circle at 80% 70%,#8bc34a 2px,transparent 3px);
+  background-size:70px 70px,90px 90px;
+}
+.app{max-width:1050px;margin:auto;padding:18px}
+.top{
+  background:linear-gradient(110deg,var(--green),#147567);
+  color:white;border-radius:28px;padding:22px 28px;
+  box-shadow:0 14px 35px #0f5b5230; position:relative; overflow:hidden;
+}
+.top:after{
+  content:"➕  ×  ÷  =  7  8  9"; position:absolute; left:18px; top:12px;
+  font-size:34px; opacity:.13; letter-spacing:8px; direction:ltr;
+}
+.school{font-size:18px;font-weight:700;opacity:.95}
+h1{font-size:42px;margin:5px 0 3px;text-shadow:0 3px 0 #073f38}
+.teacher{font-size:17px}
+.toolbar{display:flex;gap:10px;justify-content:space-between;align-items:center;margin:16px 0}
+.badge{background:white;border:2px solid #dbe9d8;border-radius:16px;padding:10px 15px;font-weight:bold}
+.btn{
+ border:0;border-radius:14px;padding:12px 18px;font-weight:bold;font-size:15px;
+ cursor:pointer;background:#fff;color:var(--green);box-shadow:0 5px 14px #00000012;
+}
+.btn:hover{transform:translateY(-1px)}
+#musicBtn{background:#fff7c9}
+.progress{height:12px;background:#dfe9df;border-radius:99px;overflow:hidden;flex:1}
+#bar{height:100%;width:0;background:linear-gradient(90deg,var(--lime),#c4e56d);transition:.5s}
+.start{max-width:720px;margin:55px auto 20px}
+.card{
+ background:rgba(255,255,255,.94);border-radius:30px;padding:28px;margin-top:12px;
+ box-shadow:0 18px 45px #174e4220;border:3px solid #e5eedc;
+}
+.meta{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.lesson{color:#d94e4e;font-weight:800;font-size:18px}
+.level{padding:7px 13px;border-radius:99px;background:#edf6e7;font-weight:bold}
+.icon{
+ width:78px;height:78px;border-radius:23px;background:#fff3c4;
+ display:grid;place-items:center;font-size:42px;box-shadow:inset 0 0 0 3px #f6d96d;
+}
+.question{display:grid;grid-template-columns:90px 1fr;gap:20px;align-items:center;margin:25px 0}
+.qtext{font-size:26px;font-weight:800;line-height:1.65}
+.math{direction:ltr;unicode-bidi:isolate;font-family:"Consolas","Arial",sans-serif;display:inline-block;letter-spacing:1px}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.option{
+ background:#fff;border:3px solid #dbe7dd;border-radius:20px;padding:17px 20px;
+ min-height:70px;font-size:21px;font-weight:800;text-align:center;cursor:pointer;
+ transition:.18s;position:relative;overflow:hidden;
+}
+.option:hover{border-color:#9bc56a;transform:scale(1.015)}
+.option.correct{background:#dff7e4;border-color:#34a853;color:#146b2b;animation:pop .45s}
+.option.wrong{background:#ffe3e3;border-color:#e85b5b;color:#a62c2c;animation:shake .45s;box-shadow:0 0 0 5px #e85b5b22}
+.option.locked{cursor:default}.option.wrong{cursor:not-allowed;opacity:.92}
+.hint{
+ margin-top:17px;border:2px dashed #c6d98e;background:#fbfbe9;border-radius:16px;
+ padding:14px 17px;display:none;line-height:1.7;font-size:17px;
+}
+#hintBtn{margin-top:17px;background:#eef8df;border:2px solid #b9d77e}
+.feedback{min-height:42px;margin-top:14px;font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:14px;padding:8px 12px}
+.next{display:none;margin:20px auto 0;background:var(--green);color:white;font-size:19px}
+.stars{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;font-size:28px;animation:fall 1.3s ease-out forwards}
+.transition{
+ position:fixed;inset:0;background:rgba(15,91,82,.24);backdrop-filter:blur(4px);
+ display:none;place-items:center;z-index:20;
+}
+.transition.show{display:grid;animation:fadeIn .25s ease}
+.transition-box{
+ min-width:320px;max-width:88%;text-align:center;background:white;border:4px solid #dfeccf;
+ border-radius:28px;padding:28px 34px;box-shadow:0 20px 60px #0002;
+ animation:bounceIn .45s ease;
+}
+.transition-box #transitionIcon{font-size:58px;margin-bottom:8px}
+.transition-box #transitionText{font-size:24px;font-weight:900;color:var(--green)}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes bounceIn{0%{transform:scale(.7)}70%{transform:scale(1.05)}100%{transform:scale(1)}}
+@keyframes pulseCard{50%{transform:scale(1.015);box-shadow:0 20px 55px #174e4230}}
+.final{display:none;text-align:center;padding:45px 20px}
+.final .trophy{font-size:90px}
+.score{font-size:35px;font-weight:900;color:var(--green)}
+.certificate{display:inline-block;margin-top:15px;padding:12px 20px;border-radius:14px;background:#fff7c9;font-weight:bold}
+.footer{text-align:center;padding:16px;font-size:13px;opacity:.7}
+@keyframes pop{50%{transform:scale(1.07)}}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fall{0%{transform:translateY(0) scale(.5) rotate(0);opacity:0}20%{opacity:1}100%{transform:translateY(85vh) scale(1.3) rotate(420deg);opacity:0}}
+@media(max-width:700px){
+ h1{font-size:32px}.options{grid-template-columns:1fr}.qtext{font-size:21px}
+ .question{grid-template-columns:70px 1fr}.icon{width:65px;height:65px;font-size:34px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<section class="card start" id="startCard">
+  <div class="icon" style="margin:auto;font-size:54px">👑</div>
+  <h2 style="text-align:center;font-size:32px;margin:15px 0 8px">🎯 أهلاً بك في ملوك الرياضيات</h2>
+  <p style="text-align:center;font-size:18px">أدخل اسمك وشعبتك ثم ابدأ المسابقة</p>
+  <div style="max-width:520px;margin:25px auto">
+    <label style="display:block;font-weight:800;margin:12px 0 7px">👤 اسم الطالب</label>
+    <input id="studentName" type="text" placeholder="اكتب اسمك هنا"
+      style="width:100%;padding:16px;border:3px solid #dbe7dd;border-radius:16px;font-size:19px;text-align:right">
+    <label style="display:block;font-weight:800;margin:18px 0 7px">🏫 الشعبة</label>
+    <input id="studentClass" type="text" placeholder="مثال: خامس / أ"
+      style="width:100%;padding:16px;border:3px solid #dbe7dd;border-radius:16px;font-size:19px;text-align:right">
+    <button class="btn" id="startBtn" style="width:100%;margin-top:22px;background:#0f5b52;color:white;font-size:21px">
+      🚀 ابدأ المسابقة
+    </button>
+  </div>
+</section>
+
+<div id="gameArea" style="display:none">
+<header class="top">
+  <div class="school">مدرسة خالد بن الوليد</div>
+  <h1>👑 ملوك الرياضيات</h1>
+  <div class="teacher">إعداد: الأستاذ فوزي أبو مسلم</div>
+</header>
+
+<div class="toolbar">
+  <div class="badge" id="counter">السؤال 1 من 10</div>
+  <div class="progress"><div id="bar"></div></div>
+  <button class="btn" id="musicBtn">🎵 تشغيل الموسيقى</button>
+</div>
+
+<main class="card" id="quizCard">
+  <div class="meta">
+    <div class="lesson" id="lesson"></div>
+    <div class="level" id="level"></div>
+  </div>
+  <div class="question">
+    <div class="icon" id="icon"></div>
+    <div class="qtext" id="qtext"></div>
+  </div>
+  <div class="options" id="options"></div>
+  <button class="btn" id="hintBtn">💡 تلميح</button>
+  <div class="hint" id="hint"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="btn next" id="nextBtn">السؤال التالي ➜</button>
+</main>
+
+<section class="card final" id="finalCard">
+  <div class="trophy">🏆</div>
+  <h2>أحسنت! وصلت إلى نهاية المسابقة</h2>
+  <div class="score" id="score"></div>
+  <div class="certificate">👑 أنت من ملوك الرياضيات 👑</div>
+  <p>مدرسة خالد بن الوليد — الأستاذ فوزي أبو مسلم</p>
+  <button class="btn" onclick="restart()">🔄 إعادة المسابقة</button>
+</section>
+
+<div class="stars" id="stars"></div>
+<div class="transition" id="transition">
+  <div class="transition-box">
+    <div id="transitionIcon">✨</div>
+    <div id="transitionText">استعد للسؤال التالي...</div>
+  </div>
+</div>
+<div class="footer">المسابقة مبنية حصريًا على الصفحات المرفوعة من الكتاب.</div>
+</div>
+</div>
+
+<script>
+const questions = [
+ {lesson:"الوحدة الأولى — الدرس 3: جمع الأعداد الكلية وطرحها",level:"سهل",icon:"➕",
+  q:"أوجد ناتج الجمع: <span class='math'>3421664 + 1897632</span>",
+  a:["5219296","5319296","5319926","5391296"],correct:1,
+  hint:"اجمع من اليمين إلى اليسار، مع إعادة التجميع عند الحاجة."},
+ {lesson:"الوحدة الأولى — الدرس 3: التقدير",level:"سهل",icon:"🎯",
+  q:"عند تقدير <span class='math'>3421664 + 1897632</span> بالتقريب إلى أعلى منزلة، ما التقدير؟",
+  a:["4000000","5000000","6000000","7000000"],correct:1,
+  hint:"قرّب 3421664 إلى 3000000 وقرّب 1897632 إلى 2000000."},
+ {lesson:"الوحدة الأولى — الدرس 3: طرح الأعداد الكلية",level:"متوسط",icon:"➖",
+  q:"أوجد ناتج الطرح: <span class='math'>6938179 − 3165478</span>",
+  a:["3772701","3772071","4002701","3702771"],correct:0,
+  hint:"رتّب العددين حسب القيمة المنزلية ثم اطرح من اليمين إلى اليسار."},
+ {lesson:"الوحدة الأولى — الدرس 3: التقدير",level:"متوسط",icon:"🔎",
+  q:"ما التقدير لناتج <span class='math'>6938179 − 3165478</span> بالتقريب إلى أعلى منزلة؟",
+  a:["3000000","4000000","5000000","6000000"],correct:1,
+  hint:"قرّب العدد الأول إلى 7000000 والثاني إلى 3000000."},
+ {lesson:"الوحدة الأولى — الدرس 3: الجمع",level:"متوسط",icon:"🧮",
+  q:"أوجد ناتج: <span class='math'>2827160 + 1915512</span>",
+  a:["4742672","4732672","4742762","4724672"],correct:0,
+  hint:"ابدأ بآحاد العددين ثم أكمل الجمع منزلةً منزلة."},
+ {lesson:"الوحدة الأولى — مسائل من الحياة",level:"تفكير",icon:"🌍",
+  q:"مساحة الجزائر <span class='math'>2381741 km²</span>، وليبيا <span class='math'>1759541 km²</span>، والمغرب <span class='math'>710850 km²</span>. ما مساحة الدول الثلاث معًا؟",
+  a:["4752132 km²","4852132 km²","4852312 km²","5852132 km²"],correct:1,
+  hint:"اجمع مساحات الجزائر وليبيا، ثم أضف مساحة المغرب."},
+ {lesson:"الوحدة الأولى — مسائل من الحياة",level:"تفكير",icon:"📈",
+  q:"بلغت قيمة صادرات المملكة من الأسمدة <span class='math'>15300000</span> عام 2016 و<span class='math'>27900000</span> عام 2017. كم مقدار زيادة الصادرات؟",
+  a:["11600000","12000000","12600000","13600000"],correct:2,
+  hint:"أوجد الزيادة بطرح قيمة 2016 من قيمة 2017."},
+ {lesson:"الوحدة الأولى — جمع الأعداد الكلية",level:"سهل",icon:"➕",
+  q:"أوجد ناتج الجمع: <span class='math'>2827160 + 1915512</span>",
+  a:["4742672","4742762","4724672","4702672"],correct:0,
+  hint:"اجمع من اليمين إلى اليسار، مع الانتباه لإعادة التجميع."},
+ {lesson:"الوحدة الأولى — طرح الأعداد الكلية",level:"سهل",icon:"➖",
+  q:"أوجد ناتج الطرح: <span class='math'>6938179 − 3165478</span>",
+  a:["3772701","3772071","3702701","4772701"],correct:0,
+  hint:"رتّب العددين حسب القيمة المنزلية ثم اطرح من اليمين إلى اليسار."},
+ {lesson:"الوحدة الأولى — التحقق من صحة الحل",level:"سهل",icon:"💡",
+  q:"بماذا يمكن التحقق من صحة ناتج عملية الطرح؟",
+  a:["بجمع المطروح مع ناتج الطرح","بجمع العددين فقط","بضرب العددين","بتغيير الأعداد"],correct:0,
+  hint:"استخدم العملية العكسية للطرح: الجمع."}
+];
+
+let index=0, score=0, locked=false, studentName="", studentClass="";
+const $=id=>document.getElementById(id);
+function render(){
+  const x=questions[index]; locked=false;
+  $("counter").textContent=`السؤال ${index+1} من ${questions.length}`;
+  $("bar").style.width=`${(index/questions.length)*100}%`;
+  $("lesson").textContent=x.lesson;
+  $("level").textContent="المستوى: "+x.level;
+  $("icon").textContent=x.icon;
+  $("qtext").innerHTML=x.q.replace(/(?<=\d),(?=\d)/g,"");
+  $("feedback").textContent="";
+  $("hint").style.display="none";
+  $("hint").textContent="💡 "+x.hint.replace(/(?<=\d),(?=\d)/g,"");
+  $("hintBtn").style.display="inline-block";
+  $("nextBtn").style.display="none";
+  $("options").innerHTML="";
+  x.a.forEach((ans,i)=>{
+    const b=document.createElement("button");
+    b.className="option"; b.innerHTML=`<span style="display:inline-block;direction:ltr">${String.fromCharCode(65+i)}</span> — ${ans.replace(/(?<=\d),(?=\d)/g,"")}`;
+    b.onclick=()=>choose(i,b);
+    $("options").appendChild(b);
+  });
+}
+function choose(i,btn){
+  if(locked)return;
+  const x=questions[index];
+  if(i===x.correct){
+    locked=true; score++; btn.classList.add("correct");
+    $("feedback").textContent="🌟 إجابة صحيحة! أحسنت يا بطل الرياضيات!";
+    $("feedback").style.color="#20843a";
+    $("hintBtn").style.display="none";
+    celebrate(); goodSound();
+    document.querySelectorAll(".option").forEach(b=>b.classList.add("locked"));
+    $("bar").style.width=`${((index+1)/questions.length)*100}%`;
+    if(index<questions.length-1){
+      $("nextBtn").style.display="block";
+      showTransition("🎉","إجابة صحيحة! جاهز للتحدي التالي؟");
+      setTimeout(()=>{
+        hideTransition();
+        index++;
+        render();
+        $("quizCard").style.animation="pulseCard .5s ease";
+        setTimeout(()=>$("quizCard").style.animation="",500);
+      },1500);
+      $("nextBtn").style.display="none";
+    }else{
+      showTransition("🏆","ممتاز! وصلت إلى نهاية التحدي");
+      setTimeout(()=>{hideTransition(); finish();},1500);
+    }
+  }else{
+    // الخطأ يبقى ظاهرًا أمام الطالب داخل نفس السؤال قبل الانتقال.
+    btn.classList.add("wrong","locked");
+    btn.setAttribute("aria-label","إجابة خاطئة");
+    $("feedback").innerHTML="❌ <strong>إجابة خاطئة</strong> — هذه ليست الإجابة الصحيحة.";
+    $("feedback").style.color="#b22e2e";
+    $("feedback").style.background="#fff0f0";
+    softBuzz();
+    document.querySelectorAll(".option").forEach(b=>b.classList.add("locked"));
+    setTimeout(()=>{
+      if(index < questions.length-1){
+        index++;
+        render();
+        $("quizCard").style.animation="pulseCard .5s ease";
+        setTimeout(()=>$("quizCard").style.animation="",500);
+        window.scrollTo({top:0,behavior:"smooth"});
+      }else{
+        finish();
+      }
+    },2200);
+  }
+}
+$("hintBtn").onclick=()=>{$("hint").style.display="block";};
+$("nextBtn").onclick=()=>{};
+function celebrate(){
+  for(let i=0;i<22;i++){
+    const s=document.createElement("div");s.className="star";s.textContent=["⭐","✨","🌟"][i%3];
+    s.style.left=Math.random()*100+"%";s.style.top=(15+Math.random()*25)+"%";
+    s.style.animationDelay=(Math.random()*.25)+"s";$("stars").appendChild(s);
+    setTimeout(()=>s.remove(),1600);
+  }
+}
+function finish(){
+  $("quizCard").style.display="none";$("finalCard").style.display="block";
+  $("score").textContent=`${studentName} — ${studentClass} | نتيجتك: ${score} / ${questions.length}`;
+  $("bar").style.width="100%"; finalSound();
+}
+function restart(){index=0;score=0;$("finalCard").style.display="none";$("quizCard").style.display="block";render();}
+function showTransition(icon,text){
+  $("transitionIcon").textContent=icon;
+  $("transitionText").textContent=text;
+  $("transition").classList.add("show");
+}
+function hideTransition(){
+  $("transition").classList.remove("show");
+}
+let audioCtx=null, timer=null, playing=false;
+function initAudio(){
+ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+}
+function tone(freq,dur,type="sine",vol=.035){
+ initAudio();const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+ o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(vol,audioCtx.currentTime);
+ g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);
+ o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+dur);
+}
+function goodSound(){[523,659,784].forEach((f,i)=>setTimeout(()=>tone(f,.18,"sine",.06),i*80));}
+function softBuzz(){tone(180,.14,"triangle",.045);}
+function finalSound(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.25,"sine",.06),i*110));}
+function music(){
+ initAudio(); if(playing){clearInterval(timer);playing=false;$("musicBtn").textContent="🎵 تشغيل الموسيقى";return;}
+ playing=true;$("musicBtn").textContent="⏸️ إيقاف الموسيقى";
+ const notes=[261.63,329.63,392,329.63,293.66,349.23,440,349.23];
+ let n=0; timer=setInterval(()=>tone(notes[n++%notes.length],.42,"sine",.018),520);
+}
+$("musicBtn").onclick=music;
+
+$("startBtn").onclick=()=>{
+  const name=$("studentName").value.trim();
+  const cls=$("studentClass").value.trim();
+  if(!name || !cls){
+    alert("يرجى كتابة اسم الطالب والشعبة قبل بدء المسابقة.");
+    return;
+  }
+  studentName=name; studentClass=cls;
+  $("startCard").style.display="none";
+  $("gameArea").style.display="block";
+  render();
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+</script>
+</body>
+</html>
